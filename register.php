@@ -63,67 +63,213 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - Estate Hub</title>
-    <style>
+        <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
         body {
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             background: #1f293a;
-            font-family: Arial, sans-serif;
         }
 
-        .box {
+        .container {
+            position: relative;
             width: 400px;
+            height: 600px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container span {
+            position: absolute;
             background: #2c4766;
-            padding: 40px;
-            border-radius: 10px;
+            border-radius: 8px;
+        }
+
+        /* Top border */
+        .container span:nth-child(1) {
+            top: 0;
+            left: 0;
+            width: 400px;
+            height: 6px;
+            background: linear-gradient(90deg, #2c4766, #0ef, #2c4766);
+            background-size: 200% 100%;
+            animation: flow 2s linear infinite;
+        }
+
+        /* Right border */
+        .container span:nth-child(2) {
+            top: 0;
+            right: 0;
+            width: 6px;
+            height: 600px;
+            background: linear-gradient(180deg, #2c4766, #0ef, #2c4766);
+            background-size: 100% 200%;
+            animation: flow 2s linear infinite;
+            animation-delay: 0.5s;
+        }
+
+        /* Bottom border */
+        .container span:nth-child(3) {
+            bottom: 0;
+            right: 0;
+            width: 400px;
+            height: 6px;
+            background: linear-gradient(90deg, #2c4766, #0ef, #2c4766);
+            background-size: 200% 100%;
+            animation: flow 2s linear infinite;
+            animation-delay: 1s;
+        }
+
+        /* Left border */
+        .container span:nth-child(4) {
+            bottom: 0;
+            left: 0;
+            width: 6px;
+            height: 600px;
+            background: linear-gradient(180deg, #2c4766, #0ef, #2c4766);
+            background-size: 100% 200%;
+            animation: flow 2s linear infinite;
+            animation-delay: 1.5s;
+        }
+
+        @keyframes flow {
+            0% {
+                background-position: 0% 0%;
+                box-shadow: 0 0 10px #0ef,
+                           0 0 20px #0ef,
+                           0 0 40px #0ef;
+            }
+            50% {
+                background-position: 100% 0%;
+                box-shadow: 0 0 20px #0ef,
+                           0 0 40px #0ef,
+                           0 0 60px #0ef;
+            }
+            100% {
+                background-position: 0% 0%;
+                box-shadow: 0 0 10px #0ef,
+                           0 0 20px #0ef,
+                           0 0 40px #0ef;
+            }
+        }
+
+        .register-box {
+            position: absolute;
+            width: 400px;
+            z-index: 1;
+        }
+
+        form {
+            width: 100%;
+            padding: 0 50px;
         }
 
         h2 {
+            font-size: 2em;
             color: #0ef;
             text-align: center;
             margin-bottom: 30px;
         }
 
         .input-box {
-            margin-bottom: 20px;
+            position: relative;
+            margin: 25px 0;
         }
 
         input {
             width: 100%;
-            padding: 12px;
-            border-radius: 25px;
-            border: none;
+            height: 50px;
+            background: transparent;
+            border: 2px solid #2c4766;
             outline: none;
+            border-radius: 40px;
+            font-size: 1em;
+            color: #fff;
+            padding: 0 20px;
+            transition: .5s ease;
+        }
+
+        input:focus,
+        input:valid {
+            border-color: #0ef;
+        }
+
+        label {
+            position: absolute;
+            top: 50%;
+            left: 20px;
+            transform: translateY(-50%);
+            font-size: 1em;
+            color: #fff;
+            pointer-events: none;
+            transition: .5s ease;
+        }
+
+        input:focus~label,
+        input:valid~label {
+            top: 1px;
+            font-size: .8em;
+            background: #1f293a;
+            padding: 0 6px;
+            color: #0ef;
         }
 
         .btn {
             width: 100%;
-            padding: 12px;
-            border-radius: 25px;
-            border: none;
+            height: 45px;
             background: #0ef;
-            color: #1f293a;
-            font-weight: bold;
+            border: none;
+            outline: none;
+            border-radius: 40px;
             cursor: pointer;
-        }
-
-        .error {
-            color: #ff4d4d;
-            margin-bottom: 15px;
-            text-align: center;
+            font-size: 1em;
+            color: #1f293a;
+            font-weight: 600;
+            margin-top: 20px;
         }
 
         .login-link {
+            margin: 20px 0 10px;
             text-align: center;
-            margin-top: 15px;
             color: #fff;
         }
 
         .login-link a {
+            font-size: 1em;
             color: #0ef;
             text-decoration: none;
+            font-weight: 600;
+        }
+
+        .error-message {
+            color: #ff3333;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+            background: rgba(255, 51, 51, 0.1);
+            padding: 10px;
+            border-radius: 20px;
+        }
+
+        .success-message {
+            color: #00ff00;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+            background: rgba(0, 255, 0, 0.1);
+            padding: 10px;
+            border-radius: 20px;
         }
     </style>
 </head>

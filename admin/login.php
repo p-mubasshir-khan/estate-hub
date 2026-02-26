@@ -1,47 +1,26 @@
 <?php
 session_start();
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
-// Redirect if already logged in
-if(isset($_SESSION['admin_id'])) {
-    header('Location: dashboard.php');
-    exit();
-}
-
 require_once '../config/database.php';
 
 $error = '';
-$debug_info = '';
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $username = trim($_POST['username']);
-    $password = $_POST['password'];
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    try {
-        // First check if user exists
-        $stmt = $conn->prepare("SELECT * FROM admin_users WHERE username = :username");
-        $stmt->execute(['username' => $username]);
-        $admin = $stmt->fetch(PDO::FETCH_ASSOC);
+    $username = $_POST['username'] ?? '';
+    $password = $_POST['password'] ?? '';
 
-        if ($admin) {
-            // User exists, verify password
-            if (password_verify($password, $admin['password'])) {
-                $_SESSION['admin_id'] = $admin['id'];
-                $_SESSION['admin_username'] = $admin['username'];
-                header('Location: dashboard.php');
-                exit();
-            } else {
-                $error = 'Invalid password';
-                $debug_info = 'Password verification failed';
-            }
-        } else {
-            $error = 'User not found';
-            $debug_info = 'No admin user with username: ' . htmlspecialchars($username);
-        }
-    } catch (PDOException $e) {
-        $error = 'Database error';
-        $debug_info = $e->getMessage();
+    $stmt = $conn->prepare("SELECT * FROM admin_users WHERE username = ?");
+    $stmt->execute([$username]);
+    $admin = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($admin && password_verify($password, $admin['password'])) {
+        $_SESSION['admin_id'] = $admin['id'];
+        $_SESSION['admin_username'] = $admin['username'];
+
+        header("Location: dashboard.php");
+        exit();
+    } else {
+        $error = "Invalid admin credentials";
     }
 }
 ?>

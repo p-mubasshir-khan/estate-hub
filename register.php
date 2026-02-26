@@ -291,10 +291,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <?php endif; ?>
             <form action="" method="POST">
                 <div class="input-box">
-                    <input type="text" name="username" required>
-                    <label>Username</label>
-                </div>
-                <div class="input-box">
                     <input type="email" name="email" required>
                     <label>Email</label>
                 </div>
